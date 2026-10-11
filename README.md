@@ -1,5 +1,7 @@
 # Agent Memory Powers
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 > **Your agent forgets. Your repo doesn't.**
 
 Agent Memory Powers is a drop-in documentation structure that gives AI coding agents a **durable, written memory of your project**. Every step of the work — request, specification, plan, decision — leaves a Markdown document in a predictable place, with a clear owner and a clear lifespan. Each new agent session starts from what the project already knows instead of starting from scratch.
@@ -171,58 +173,15 @@ If you installed the skills in `.claude/skills/`, run `node .claude/skills/creat
 
 ## Installation
 
-Agent Memory Powers is installed **into an existing project**: you copy the structure in, then let the agent fill in what it can.
+Agent Memory Powers goes **into an existing project**: you add its files, then let the agent fill in what it can.
 
-1. **Copy the documentation structure into your project**, without overwriting anything that already exists:
-   - `AGENTS.md`, `CLAUDE.md`, `ARCHITECTURE.md`, `CODEMAP.md`, `CHANGELOG.md`, `TODO.md`;
-   - the `docs/` folder.
-
-   Do **not** copy this `README.md` or the `LICENSE` — they belong to the template; your project keeps its own README, which the agent will maintain. Do not copy `.obsidian/` either.
-
-   `cp -n` leaves existing files untouched, so check two of them by hand:
-   - if your project already has an **`AGENTS.md`**, merge this template's sections into it — otherwise the workflow is never installed;
-   - if it already has a **`CLAUDE.md`**, add the line `@AGENTS.md` to it.
-
-   For example, with a POSIX shell:
-
-   ```bash
-   git clone https://github.com/kbuleon/agent-memory-powers.git /tmp/agent-memory-powers
-   ```
-
-   ```bash
-   cd /tmp/agent-memory-powers && cp -rn AGENTS.md CLAUDE.md ARCHITECTURE.md CODEMAP.md CHANGELOG.md TODO.md docs /path/to/your-project/
-   ```
-
-2. **Install the skills where your agent looks for them.** Most agents read `.agents/skills/`, but **Claude Code does not yet** — it only reads `.claude/skills/` ([anthropics/claude-code#31005](https://github.com/anthropics/claude-code/issues/31005)). From `/tmp/agent-memory-powers`:
-   - **Agents that read `.agents/skills/`** (Codex, GitHub Copilot, Cursor, Gemini CLI, OpenCode…):
-
-     ```bash
-     cp -rn .agents /path/to/your-project/
-     ```
-
-   - **Claude Code only** — copy the skills to `.claude/skills/` instead:
-
-     ```bash
-     mkdir -p /path/to/your-project/.claude && cp -rn .agents/skills /path/to/your-project/.claude/
-     ```
-
-   - **Claude Code and other agents** — keep `.agents/skills/` as the single source, copied as above, and link Claude Code to it rather than duplicating the skills:
-
-     ```bash
-     mkdir -p /path/to/your-project/.claude && ln -s ../.agents/skills /path/to/your-project/.claude/skills
-     ```
-
-     If `.claude/skills/` already exists in your project, link each skill inside it instead:
-
-     ```bash
-     ln -s ../../.agents/skills/create-work-item ../../.agents/skills/create-work-item-from-jira /path/to/your-project/.claude/skills/
-     ```
-
-     On Windows, symbolic links require Developer Mode and git's `core.symlinks` setting.
-
+1. **Add the files to your project** — everything in this repository except `README.md` and `LICENSE`, which describe the template itself. If a file already exists in your project, keep yours:
+   - an existing `AGENTS.md`: merge this template's sections into it;
+   - an existing `CLAUDE.md`: add the line `@AGENTS.md` to it.
+2. **Using Claude Code? Rename the `.agents/` folder to `.claude/`.** Claude Code only looks for skills in `.claude/skills/`. If your project already has a `.claude/` folder, move `.agents/skills/` into it instead. Other agents — Codex, GitHub Copilot, Cursor, Gemini CLI, OpenCode… — read `.agents/skills/` as is.
 3. **Name your project.** In `AGENTS.md`, replace **TO BE COMPLETED** on the first line with your project's name and a one-line description.
 4. **Configure the work items.** In `docs/work-items-settings.json`, set `prefix` to your project's ticket code. If you use the Jira import, `jiraLabel` is the label added to imported issues — `ai-agent` by default, without spaces.
-5. **Merge the `.gitignore` rules** from this repository into your project's `.gitignore`. They keep `.claude/` ignored except for skills installed there, which are versioned work, and ignore Obsidian's local files. If your `.gitignore` already contains a `.claude/` line, replace it with these rules: with `.claude/`, git does not even look inside the folder, and the skills could not be re-included.
+5. **Merge the `.gitignore` rules** into your project's `.gitignore`: they keep the skills versioned and Obsidian's local files out of git. If your `.gitignore` already has a `.claude/` line, replace it with these rules.
 6. **Let the agent bootstrap the memory.** In your agent, run these prompts:
    - *Generate a code map of the project in CODEMAP.md*
    - *Generate ARCHITECTURE.md following the guidelines in AGENTS.md*
