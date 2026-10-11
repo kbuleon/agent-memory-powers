@@ -1,0 +1,13 @@
+# --- Claude Code ----------------------------------------------------------
+# Ignored, except for the repository's skills, which are versioned work: they
+# describe the project's own procedures, not a machine's configuration. The
+# ".claude/*" form is required — with ".claude/", git does not descend into
+# the directory and no negation can re-include a file inside it.
+# No trailing slash on the negation, so that a symlinked .claude/skills is
+# re-included too. Still ignored: settings.local.json, launch.json, worktrees/.
+.claude/*
+!.claude/skills
+
+# --- Obsidian -------------------------------------------------------------
+.obsidian/
+.trash/
